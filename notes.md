@@ -1,0 +1,1 @@
+I have started my chess project. It only took starting this class 3 times.
