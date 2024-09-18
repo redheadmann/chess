@@ -10,8 +10,9 @@ public class KingMovesCalculator implements PieceMovesCalculator{
         ArrayList<ChessMove> moves = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        ChessPiece queen = board.getPiece(myPosition);
-        ChessGame.TeamColor teamColor = queen.getTeamColor();
+
+        ChessPiece king = board.getPiece(myPosition);
+        ChessGame.TeamColor teamColor = king.getTeamColor();
 
         /* We go out in one direction at a time and stop at the edge of a board
           or when we encounter another piece

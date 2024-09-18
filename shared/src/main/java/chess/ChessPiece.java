@@ -73,9 +73,9 @@ public class ChessPiece {
             case KING -> new KingMovesCalculator();
             case QUEEN -> new QueenMovesCalculator();
             case BISHOP -> new BishopMovesCalculator();
-            case KNIGHT -> null;
+            case KNIGHT -> new KnightMovesCalculator();
             case ROOK -> new RookMovesCalculator();
-            case PAWN -> null;
+            case PAWN -> new PawnMoveCalculator();
         };
 
         return movesCalculator.pieceMoves(board, myPosition);
