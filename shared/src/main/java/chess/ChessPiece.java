@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -58,6 +59,28 @@ public class ChessPiece {
      */
     public PieceType getPieceType() {
         return this.type;
+    }
+
+    @Override
+    public String toString() {
+        HashMap<PieceType, String> map = new HashMap<PieceType, String>();
+        map.put(PieceType.KING, "K");
+        map.put(PieceType.QUEEN, "Q");
+        map.put(PieceType.ROOK, "R");
+        map.put(PieceType.KNIGHT, "N");
+        map.put(PieceType.BISHOP, "B");
+        map.put(PieceType.PAWN, "P");
+
+        ChessGame.TeamColor color = this.getTeamColor();
+        PieceType type = this.getPieceType();
+
+        if (color == ChessGame.TeamColor.BLACK) {
+            return map.get(type).toLowerCase();
+        } else {
+            return map.get(type);
+        }
+
+
     }
 
     /**

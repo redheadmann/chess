@@ -27,7 +27,6 @@ public class PawnMoveCalculator implements PieceMovesCalculator{
         ChessPosition nextPosition = new ChessPosition(nextRow, currentCol);
 
         if (board.getPiece(nextPosition) == null) { // next space must be empty
-
             // check if we can move forward, but not to final row
             if (nextRow > 1 && nextRow < 8) { // pawn stays in middle of the board
                 moves.add(new ChessMove(myPosition, nextPosition, null));
@@ -53,7 +52,6 @@ public class PawnMoveCalculator implements PieceMovesCalculator{
                     }
                 }
             }
-
         }
 
         /*
@@ -64,23 +62,24 @@ public class PawnMoveCalculator implements PieceMovesCalculator{
             int nextCol = currentCol + colMovement;
             nextRow = currentRow + direction;
 
-            nextPosition = new ChessPosition(nextRow, nextCol);
-            if (board.getPiece(nextPosition) != null) { // if piece is diagonal to pawn
-                if (board.getPiece(nextPosition).getTeamColor() != teamColor) { // and is on opposing team
-                    // then you can capture it
+            if (nextCol >= 1 && nextCol <= 8) { // col on board
+                nextPosition = new ChessPosition(nextRow, nextCol);
+                if (board.getPiece(nextPosition) != null) { // if piece is diagonal to pawn
+                    if (board.getPiece(nextPosition).getTeamColor() != teamColor) { // and is on opposing team
+                        // then you can capture it
 
-                    // capture with promotion
-                    if (nextRow == 8 || nextRow == 1) {
-                        for (ChessPiece.PieceType promotionPiece : ChessPiece.PieceType.values()) {
-                            if (promotionPiece != ChessPiece.PieceType.PAWN && promotionPiece != ChessPiece.PieceType.KING) { // cannot promote to pawn
-                                moves.add(new ChessMove(myPosition, nextPosition, promotionPiece));
+                        // capture with promotion
+                        if (nextRow == 8 || nextRow == 1) {
+                            for (ChessPiece.PieceType promotionPiece : ChessPiece.PieceType.values()) {
+                                if (promotionPiece != ChessPiece.PieceType.PAWN && promotionPiece != ChessPiece.PieceType.KING) { // cannot promote to pawn
+                                    moves.add(new ChessMove(myPosition, nextPosition, promotionPiece));
+                                }
                             }
+                        } else {
+                            // normal capture
+                            moves.add(new ChessMove(myPosition, nextPosition, null));
                         }
-                    } else {
-                        // normal capture
-                        moves.add(new ChessMove(myPosition, nextPosition, null));
                     }
-
                 }
             }
         }

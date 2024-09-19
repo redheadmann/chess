@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -54,6 +55,49 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        this.squares = new ChessPiece[8][8];
+
+        HashMap<Integer, ChessPiece.PieceType> colToPiece = new HashMap<>();
+        colToPiece.put(1, ChessPiece.PieceType.ROOK);
+        colToPiece.put(2, ChessPiece.PieceType.KNIGHT);
+        colToPiece.put(3, ChessPiece.PieceType.BISHOP);
+        colToPiece.put(4, ChessPiece.PieceType.QUEEN);
+        colToPiece.put(5, ChessPiece.PieceType.KING);
+        colToPiece.put(6, ChessPiece.PieceType.BISHOP);
+        colToPiece.put(7, ChessPiece.PieceType.KNIGHT);
+        colToPiece.put(8, ChessPiece.PieceType.ROOK);
+
+
+        // put in rows of pawns
+        for (int col = 1; col <= 8; col++) {
+            ChessPosition whitePawn = new ChessPosition(2, col);
+            this.addPiece(whitePawn, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+            ChessPosition whiteSpecial = new ChessPosition(1, col);
+            this.addPiece(whiteSpecial, new ChessPiece(ChessGame.TeamColor.WHITE, colToPiece.get(col)));
+
+
+            ChessPosition blackPawn = new ChessPosition(7, col);
+            this.addPiece(blackPawn, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+            ChessPosition blackSpecial = new ChessPosition(8, col);
+            this.addPiece(blackSpecial, new ChessPiece(ChessGame.TeamColor.BLACK, colToPiece.get(col)));
+        }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                if (this.getPiece(new ChessPosition(row, col)) == null) {
+                    str.append("| ");
+                } else {
+                    str.append("|").append(this.getPiece(new ChessPosition(row, col)).toString());
+                }
+            }
+            str.append("|/n");
+        }
+        return str.toString();
+    }
+
 }
