@@ -51,6 +51,35 @@ public class ChessBoard {
     }
 
     /**
+     * Moves a single chess piece
+     *
+     * @param move to implement, should know beforehand it is valid
+     */
+    public void movePiece(ChessMove move) {
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+
+        // Check for a piece at the endPosition
+        ChessPiece potentialPiece = getPiece(endPosition);
+        if (potentialPiece != null) {
+            potentialPiece = null; // delete the captured piece
+        }
+
+        // Move the piece
+        ChessPiece movingPiece = getPiece(startPosition); // get piece which is moving
+        ChessPiece.PieceType promotionPieceType = move.getPromotionPiece(); // promotion type
+        if (promotionPieceType != null) { // if promoting the piece, create a new chess piece
+            ChessGame.TeamColor pieceColor = movingPiece.getTeamColor();
+            movingPiece = null;
+            addPiece(endPosition, new ChessPiece(pieceColor, promotionPieceType));
+        } else {
+            addPiece(startPosition, null); // remove reference to moving piece at its starting position
+            addPiece(endPosition, movingPiece);
+        }
+
+    }
+
+    /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
