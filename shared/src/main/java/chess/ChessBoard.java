@@ -1,8 +1,6 @@
 package chess;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -77,6 +75,42 @@ public class ChessBoard {
             addPiece(endPosition, movingPiece);
         }
 
+    }
+
+
+    public class BoardIterator<T> implements Iterator<T> {
+        private Queue<ChessPosition> placements;
+        /**
+         * Initialize the Iterator with a queue of chess pieces on the board
+         */
+        public BoardIterator(ChessGame.TeamColor teamColor) {
+            placements = new LinkedList<>();
+            // Check each square on the board
+            for (int row = 1; row <= 8; row++) {
+                for (int col = 1; col <= 8; col++) {
+                    ChessPosition position = new ChessPosition(row, col);
+                    ChessPiece chessPiece = getPiece(position);
+                    if (chessPiece != null) { // If there is a piece of the correct color
+                        if (chessPiece.getTeamColor() == teamColor) {
+                            placements.add(position); // add the position to the queue
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !placements.isEmpty();
+        }
+
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException("Chess Board Iterator has no more pieces");
+            }
+            return (T) placements.remove();
+        }
     }
 
     /**
