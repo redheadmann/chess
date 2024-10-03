@@ -11,6 +11,7 @@ import java.util.Collection;
 public class ChessGame {
     private ChessBoard board; // the board on which to play
     private final GameState gameState;
+    private final ChessRuleBook ruleBook = new ChessRuleBook();
 
     public ChessGame() {
         board = new ChessBoard();
@@ -43,6 +44,17 @@ public class ChessGame {
     }
 
     /**
+     * Get the other team's color
+     *
+     * @param teamColor the color of the team we know
+     * @return the color of the opposing team
+     */
+    public static TeamColor getOtherColor(TeamColor teamColor) {
+        if (teamColor == TeamColor.WHITE) return TeamColor.BLACK;
+        return TeamColor.WHITE;
+    }
+
+    /**
      * Gets a valid moves for a piece at the given location
      *
      * @param startPosition the piece to get valid moves for
@@ -50,8 +62,7 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        ChessPiece piece = board.getPiece(startPosition);
-        return piece.pieceMoves(this.board, startPosition);
+        return ruleBook.validMoves(this.board, startPosition);
     }
 
     /**
@@ -63,8 +74,15 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition moveStartPosition = move.getStartPosition();
         Collection<ChessMove> validMoves = validMoves(moveStartPosition);
+        // If validMoves is null, there was no piece at the given position
+        if (validMoves == null) throw new InvalidMoveException("Move given for nonexistent piece");
+        // If there is a piece at the position but it is not its turn, throw an exception
+        if (!gameState.moveIsInTurn(move, board)) {
+            throw new InvalidMoveException("It is not this team's turn");
+        }
 
-        if (validMoves.contains(move)) { // if move is valid, put it in place
+        // If move is valid, put it in place
+        if (validMoves.contains(move)) {
             board.movePiece(move);
         } else {
             throw new InvalidMoveException("Move given was invalid");
@@ -78,7 +96,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        return ruleBook.isInCheck(this.getBoard(), teamColor);
     }
 
     /**
@@ -88,7 +106,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        return ruleBook.isInCheckmate(this.getBoard(), teamColor);
     }
 
     /**
@@ -99,7 +117,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        return ruleBook.isInStalemate(this.getBoard(), teamColor);
     }
 
     /**

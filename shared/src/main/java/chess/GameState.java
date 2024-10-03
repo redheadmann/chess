@@ -8,7 +8,6 @@ public class GameState {
     }
 
 
-
     /*
         Getters and Setters
      */
@@ -34,5 +33,18 @@ public class GameState {
 
     public void updateBoard(ChessBoard nextBoard) {
         this.updateColor();
+    }
+
+    /**
+     * Check if the piece moving is on the team whose turn it is
+     *
+     * @param move the potential move
+     * @return whether this piece can move right now
+     */
+    public Boolean moveIsInTurn(ChessMove move, ChessBoard board) {
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        ChessGame.TeamColor teamColor = piece.getTeamColor();
+        if (teamColor == this.teamTurn) return Boolean.TRUE;
+        else return Boolean.FALSE;
     }
 }

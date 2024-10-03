@@ -14,6 +14,7 @@ public class ChessBoard {
     public ChessBoard() {
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -26,6 +27,8 @@ public class ChessBoard {
     public int hashCode() {
         return Arrays.deepHashCode(squares);
     }
+
+
 
     /**
      * Adds a chess piece to the chessboard
@@ -60,15 +63,16 @@ public class ChessBoard {
         // Check for a piece at the endPosition
         ChessPiece potentialPiece = getPiece(endPosition);
         if (potentialPiece != null) {
-            potentialPiece = null; // delete the captured piece
+            addPiece(endPosition, null); // delete reference in squares array to the captured piece
         }
 
         // Move the piece
         ChessPiece movingPiece = getPiece(startPosition); // get piece which is moving
         ChessPiece.PieceType promotionPieceType = move.getPromotionPiece(); // promotion type
         if (promotionPieceType != null) { // if promoting the piece, create a new chess piece
+            // TODO: Don't dereference the original piece so we can keep a copy while testing out moves
             ChessGame.TeamColor pieceColor = movingPiece.getTeamColor();
-            movingPiece = null;
+            addPiece(startPosition, null);
             addPiece(endPosition, new ChessPiece(pieceColor, promotionPieceType));
         } else {
             addPiece(startPosition, null); // remove reference to moving piece at its starting position
@@ -78,8 +82,23 @@ public class ChessBoard {
     }
 
 
-    public class BoardIterator<T> implements Iterator<T> {
-        private Queue<ChessPosition> placements;
+    /** Creates a special board iterator, which gives the positions of all the pieces on
+     * one team
+     *
+     * @param teamColor the color of piece whose positions will be stored in the iterator
+     * @return special board iterator, which gives positions of the pieces on one team
+     */
+    public BoardIterator<ChessPosition> iterator(ChessGame.TeamColor teamColor) {
+        return new BoardIterator<>(teamColor);
+    }
+
+
+    /** Iterates over each piece of the given color
+     *
+     * @param <T> T should always be ChessPosition
+     */
+    public class BoardIterator<T> implements Iterator<ChessPosition> {
+        private final Queue<ChessPosition> placements;
         /**
          * Initialize the Iterator with a queue of chess pieces on the board
          */
@@ -90,8 +109,8 @@ public class ChessBoard {
                 for (int col = 1; col <= 8; col++) {
                     ChessPosition position = new ChessPosition(row, col);
                     ChessPiece chessPiece = getPiece(position);
-                    if (chessPiece != null) { // If there is a piece of the correct color
-                        if (chessPiece.getTeamColor() == teamColor) {
+                    if (chessPiece != null) { // If there is a piece
+                        if (chessPiece.getTeamColor() == teamColor) {  // and piece is of the correct color
                             placements.add(position); // add the position to the queue
                         }
                     }
@@ -105,11 +124,11 @@ public class ChessBoard {
         }
 
         @Override
-        public T next() {
+        public ChessPosition next() {
             if (!hasNext()) {
                 throw new NoSuchElementException("Chess Board Iterator has no more pieces");
             }
-            return (T) placements.remove();
+            return placements.remove();
         }
     }
 
@@ -144,6 +163,29 @@ public class ChessBoard {
             ChessPosition blackSpecial = new ChessPosition(8, col);
             this.addPiece(blackSpecial, new ChessPiece(ChessGame.TeamColor.BLACK, colToPiece.get(col)));
         }
+    }
+
+
+    /** Find the king of a specific team
+     *
+     * @param teamColor the color of the king to find
+     * @return the position of the correct king
+     */
+    public ChessPosition findKing(ChessGame.TeamColor teamColor) {
+        ChessPosition king = null;
+
+        // for each piece on the team, check if it is the king
+        for (BoardIterator<ChessPosition> iterator = this.iterator(teamColor); iterator.hasNext();) {
+            ChessPosition position = iterator.next();
+            ChessPiece piece = this.getPiece(position);
+
+            if (piece.getPieceType() == ChessPiece.PieceType.KING) { // if this is the king
+                king = position;
+                break;
+            }
+        }
+
+        return king;
     }
 
     @Override

@@ -58,6 +58,11 @@ public class ChessMove {
         return promotionPiece;
     }
 
+
+    public ChessMove reverseMove(ChessPiece.PieceType originalType) {
+        return new ChessMove(this.endPosition, this.startPosition, originalType);
+    }
+
     /**
      * Overrides the toString method to make debugging easier
      *
