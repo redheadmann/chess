@@ -115,9 +115,13 @@ public class ChessRuleBook {
     public Boolean isInStalemate(ChessBoard board, ChessGame.TeamColor teamColor) {
 
         /*
-        We check every single piece with teamColor, and if at least one has a move, return False
+            We first check if we are actually in checkmate
+            Then we check every single piece with teamColor, and if at least one has a move, return False
             otherwise, return True
-         */
+        */
+
+        if (isInCheckmate(board, teamColor)) return Boolean.FALSE;
+
         // For each position held by this team,
         for (ChessBoard.BoardIterator<ChessPosition> positionIterator = board.iterator(teamColor); positionIterator.hasNext();) {
             ChessPosition myPosition = positionIterator.next();

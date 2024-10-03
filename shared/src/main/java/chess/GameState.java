@@ -31,7 +31,7 @@ public class GameState {
         }
     }
 
-    public void updateBoard(ChessBoard nextBoard) {
+    public void updateTurn() {
         this.updateColor();
     }
 

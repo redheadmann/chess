@@ -81,8 +81,9 @@ public class ChessGame {
             throw new InvalidMoveException("It is not this team's turn");
         }
 
-        // If move is valid, put it in place
+        // If move is valid, put it in place and update whose turn it is
         if (validMoves.contains(move)) {
+            gameState.updateTurn();
             board.movePiece(move);
         } else {
             throw new InvalidMoveException("Move given was invalid");
