@@ -95,8 +95,9 @@ public class ChessRuleBook {
             and 2) moving each other piece to all possible positions and checking if we are in check
          */
 
+        if (!isInCheck(board, teamColor)) return Boolean.FALSE; // If we aren't even in check, we are not in checkmate
 
-        // For each position held by this team,
+        // Our king is in check. For each position held by this team,
         for (ChessBoard.BoardIterator<ChessPosition> positionIterator = board.iterator(teamColor); positionIterator.hasNext();) {
             ChessPosition startPosition = positionIterator.next();
             // consider all moves the piece at that position could make
