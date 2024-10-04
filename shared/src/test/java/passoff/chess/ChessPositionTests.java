@@ -27,6 +27,7 @@ public class ChessPositionTests {
         Assertions.assertNotEquals(original, different, "equals returned true for different positions");
     }
 
+
     @Test
     @DisplayName("HashCode Testing")
     public void hashTest() {
@@ -35,6 +36,7 @@ public class ChessPositionTests {
         Assertions.assertNotEquals(original.hashCode(), different.hashCode(),
                 "hashCode returned the same value for different positions");
     }
+
 
     @Test
     @DisplayName("Combined Testing")
