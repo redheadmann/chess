@@ -10,6 +10,7 @@ import java.util.*;
  */
 public class ChessBoard {
     private ChessPiece[][] squares = new ChessPiece[8][8];
+    private GameLog gameLog = new GameLog();
 
     public ChessBoard() {
     }
@@ -82,6 +83,29 @@ public class ChessBoard {
     }
 
 
+    /** Find the king of a specific team
+     *
+     * @param teamColor the color of the king to find
+     * @return the position of the correct king
+     */
+    public ChessPosition findKing(ChessGame.TeamColor teamColor) {
+        ChessPosition king = null;
+
+        // for each piece on the team, check if it is the king
+        for (BoardIterator<ChessPosition> iterator = this.iterator(teamColor); iterator.hasNext();) {
+            ChessPosition position = iterator.next();
+            ChessPiece piece = this.getPiece(position);
+
+            if (piece.getPieceType() == ChessPiece.PieceType.KING) { // if this is the king
+                king = position;
+                break;
+            }
+        }
+
+        return king;
+    }
+
+
     /** Creates a special board iterator, which gives the positions of all the pieces on
      * one team
      *
@@ -90,6 +114,10 @@ public class ChessBoard {
      */
     public BoardIterator<ChessPosition> iterator(ChessGame.TeamColor teamColor) {
         return new BoardIterator<>(teamColor);
+    }
+
+    public GameLog getGameLog() {
+        return gameLog;
     }
 
 
@@ -163,30 +191,13 @@ public class ChessBoard {
             ChessPosition blackSpecial = new ChessPosition(8, col);
             this.addPiece(blackSpecial, new ChessPiece(ChessGame.TeamColor.BLACK, colToPiece.get(col)));
         }
+
+        // reset game log
+        this.gameLog = new GameLog();
     }
 
 
-    /** Find the king of a specific team
-     *
-     * @param teamColor the color of the king to find
-     * @return the position of the correct king
-     */
-    public ChessPosition findKing(ChessGame.TeamColor teamColor) {
-        ChessPosition king = null;
 
-        // for each piece on the team, check if it is the king
-        for (BoardIterator<ChessPosition> iterator = this.iterator(teamColor); iterator.hasNext();) {
-            ChessPosition position = iterator.next();
-            ChessPiece piece = this.getPiece(position);
-
-            if (piece.getPieceType() == ChessPiece.PieceType.KING) { // if this is the king
-                king = position;
-                break;
-            }
-        }
-
-        return king;
-    }
 
     @Override
     public String toString() {

@@ -76,7 +76,7 @@ public class ChessGame {
         Collection<ChessMove> validMoves = validMoves(moveStartPosition);
         // If validMoves is null, there was no piece at the given position
         if (validMoves == null) throw new InvalidMoveException("Move given for nonexistent piece");
-        // If there is a piece at the position but it is not its turn, throw an exception
+        // If there is a piece at the position, but it is not its turn, throw an exception
         if (!gameState.moveIsInTurn(move, board)) {
             throw new InvalidMoveException("It is not this team's turn");
         }
@@ -84,7 +84,10 @@ public class ChessGame {
         // If move is valid, put it in place and update whose turn it is
         if (validMoves.contains(move)) {
             gameState.updateTurn();
+            ChessPiece oldPiece = board.getPiece(moveStartPosition);
             board.movePiece(move);
+            // add the move to the game log
+            board.getGameLog().addMove(move, oldPiece);
         } else {
             throw new InvalidMoveException("Move given was invalid");
         }

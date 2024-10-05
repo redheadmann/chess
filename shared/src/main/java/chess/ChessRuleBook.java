@@ -159,5 +159,4 @@ public class ChessRuleBook {
             return Boolean.FALSE;
         }
     }
-
 }
