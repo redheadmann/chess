@@ -58,11 +58,11 @@ public class PawnMoveCalculator implements PieceMovesCalculator{
             Check for pieces diagonal to pawn
          */
         for (int colMovement: new int[]{-1, 1}) {
-            // check for piece on diagonal
             int nextCol = currentCol + colMovement;
             nextRow = currentRow + direction;
 
             if (nextCol >= 1 && nextCol <= 8) { // col on board
+                // Check for piece on diagonal
                 nextPosition = new ChessPosition(nextRow, nextCol);
                 if (board.getPiece(nextPosition) != null) { // if piece is diagonal to pawn
                     if (board.getPiece(nextPosition).getTeamColor() != teamColor) { // and is on opposing team
@@ -78,6 +78,27 @@ public class PawnMoveCalculator implements PieceMovesCalculator{
                         } else {
                             // normal capture
                             moves.add(new ChessMove(myPosition, nextPosition, null));
+                        }
+                    }
+                } else { // piece is not diagonal to pawn, so en passant is possible
+                    // Check for en passant: check the last move for a pawn which moved 2 spaces right next to us
+                    GameLog log = board.getGameLog();
+                    GameLog.LogEntry lastLogEntry = log.getLastMove();
+                    if (lastLogEntry != null) { // make sure we aren't checking an empty log
+                        ChessPosition lastEndPosition = lastLogEntry.move().getEndPosition();
+                        int lastRow = lastEndPosition.getRow();
+                        int lastCol = lastEndPosition.getColumn();
+                        if (lastRow == currentRow && lastCol == nextCol) {// piece is directly left or right of us
+                            ChessPiece.PieceType lastPieceType = lastLogEntry.piece().getPieceType();
+                            if (lastPieceType == ChessPiece.PieceType.PAWN) { // piece is a pawn
+                                ChessPosition lastStartPosition = lastLogEntry.move().getStartPosition();
+                                int lastStartRow = lastStartPosition.getRow();
+                                if (Math.abs(lastRow - lastStartRow) == 2) {
+                                    ChessMove move = new ChessMove(myPosition, nextPosition, null);
+                                    move.setMoveIsEnPassant();
+                                    moves.add(move);
+                                }
+                            }
                         }
                     }
                 }

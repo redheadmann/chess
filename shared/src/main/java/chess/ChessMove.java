@@ -13,6 +13,7 @@ public class ChessMove {
     private final ChessPosition startPosition;
     private final ChessPosition endPosition;
     private final ChessPiece.PieceType promotionPiece;
+    private Boolean moveIsEnPassant = Boolean.FALSE;
 
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
@@ -37,8 +38,7 @@ public class ChessMove {
     /**
      * @return ChessPosition of starting location
      */
-    public ChessPosition getStartPosition() {
-        return startPosition;
+    public ChessPosition getStartPosition() {return startPosition;
     }
 
     /**
@@ -46,6 +46,14 @@ public class ChessMove {
      */
     public ChessPosition getEndPosition() {
         return endPosition;
+    }
+
+    public void setMoveIsEnPassant() {
+        moveIsEnPassant = Boolean.TRUE;
+    }
+
+    public Boolean moveIsEnPassant() {
+        return moveIsEnPassant;
     }
 
     /**

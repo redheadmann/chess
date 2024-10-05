@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 public class GameLog {
     public record LogEntry(ChessMove move, ChessPiece piece) { }
-    LinkedList<LogEntry> moves;
+    LinkedList<LogEntry> moves = new LinkedList<>();
 
 
     public void addMove(ChessMove move, ChessPiece piece) {
@@ -13,6 +13,10 @@ public class GameLog {
 
     public LogEntry getLastMove() {
         return moves.peekLast(); // returns null if there are no moves in the log
+    }
+
+    public LinkedList<LogEntry> getAllMoves() {
+        return moves;
     }
 
 }

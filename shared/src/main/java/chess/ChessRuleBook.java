@@ -141,8 +141,26 @@ public class ChessRuleBook {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition(); // position to which our piece could move
 
+        Boolean enPassant = move.moveIsEnPassant(); // check if the move is en passant
+
         // In case our piece captures an opposing piece, temporarily store it before moving our piece
-        ChessPiece possiblePiece = board.getPiece(endPosition); // could be an opposing piece
+        ChessPiece possiblePiece;
+        ChessPosition opposingPosition;
+        if (enPassant) {
+            // use this multiplier to move forward/backward in the following code
+            int direction = switch (teamColor) {
+                case WHITE -> -1;
+                case BLACK -> 1;
+            };
+            int endCol = endPosition.getColumn();
+            int endRow = endPosition.getRow();
+            int opposingPieceRow = endRow + direction;
+            opposingPosition = new ChessPosition(endCol, opposingPieceRow);
+            possiblePiece = board.getPiece(opposingPosition);
+        } else {
+            opposingPosition = endPosition;
+            possiblePiece = board.getPiece(endPosition); // could be an opposing piece
+        }
 
         // Move our piece, but track our old piece type in case this is a pawn being promoted
         ChessPiece.PieceType oldType = board.getPiece(startPosition).getPieceType();
@@ -150,12 +168,12 @@ public class ChessRuleBook {
         if (isInCheck(board, teamColor)) { // if this move pus us in check, put everything back and return true
             ChessMove reverseMove = move.reverseMove(oldType);
             board.movePiece(reverseMove); // move the piece back where it was
-            board.addPiece(endPosition, possiblePiece); // put the piece back which may have been captured
+            board.addPiece(opposingPosition, possiblePiece); // put the piece back which may have been captured
             return Boolean.TRUE;
         } else {  // the move does not place us in check
             ChessMove reverseMove = move.reverseMove(oldType);
             board.movePiece(reverseMove); // move the piece back where it was
-            board.addPiece(endPosition, possiblePiece); // put the piece back which may have been captured
+            board.addPiece(opposingPosition, possiblePiece); // put the piece back which may have been captured
             return Boolean.FALSE;
         }
     }
