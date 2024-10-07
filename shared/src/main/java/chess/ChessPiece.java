@@ -1,6 +1,5 @@
 package chess;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
@@ -103,7 +102,7 @@ public class ChessPiece {
             case BISHOP -> new BishopMovesCalculator();
             case KNIGHT -> new KnightMovesCalculator();
             case ROOK -> new RookMovesCalculator();
-            case PAWN -> new PawnMoveCalculator();
+            case PAWN -> new PawnMovesCalculator();
         };
 
         return movesCalculator.pieceMoves(board, myPosition);

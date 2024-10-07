@@ -60,33 +60,25 @@ public class ChessBoard {
     public void movePiece(ChessMove move) {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
-        ChessGame.TeamColor teamColor = this.getPiece(startPosition).getTeamColor();
-
-        // Check for a piece at the endPosition
-        ChessPiece potentialPiece = getPiece(endPosition);
-        if (potentialPiece != null) {
-            addPiece(endPosition, null); // delete reference in squares array to the captured piece
-        }
-
-        Boolean enPassant = move.moveIsEnPassant(); // check if the move is en passant
 
         // In case our piece captures an opposing piece, remove the board's reference to it
-        ChessPiece possiblePiece;
-        if (enPassant) {
-            // use this multiplier to move forward/backward in the following code
-            int direction = switch (teamColor) {
-                case WHITE -> -1; // black pawn is behind the white pawn
-                case BLACK -> 1;
-            };
-            int endCol = endPosition.getColumn();
-            int endRow = endPosition.getRow();
-            int opposingPieceRow = endRow + direction;
-            ChessPosition opposingPosition = new ChessPosition(endCol, opposingPieceRow);
-            possiblePiece = this.getPiece(opposingPosition);
-            if (possiblePiece != null) this.addPiece(opposingPosition, null);
+        // if the piece is a pawn, check for en passant
+        ChessPiece.PieceType pieceType = this.getPiece(startPosition).getPieceType();
+        ChessPosition opposingPosition;
+        if (pieceType == ChessPiece.PieceType.PAWN) {
+            PawnMovesCalculator pawnCalculator = new PawnMovesCalculator();
+            if (pawnCalculator.moveIsEnPassant(this, move)) {
+                opposingPosition = pawnCalculator.getEnPassantCapturePosition(move);
+            } else {
+                opposingPosition = endPosition;
+            }
         } else {
-            possiblePiece = this.getPiece(endPosition); // could be an opposing piece
-            if (possiblePiece != null) this.addPiece(endPosition, null);
+            opposingPosition = endPosition;
+        }
+        // Remove the potential opposing piece
+        ChessPiece possiblePiece = this.getPiece(opposingPosition); // could be an opposing piece
+        if (possiblePiece != null) {
+            this.addPiece(opposingPosition, null);
         }
 
 
@@ -103,6 +95,7 @@ public class ChessBoard {
         }
 
     }
+
 
 
     /** Find the king of a specific team

@@ -3,7 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class PawnMoveCalculator implements PieceMovesCalculator{
+public class PawnMovesCalculator implements PieceMovesCalculator{
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
@@ -95,7 +95,6 @@ public class PawnMoveCalculator implements PieceMovesCalculator{
                                 int lastStartRow = lastStartPosition.getRow();
                                 if (Math.abs(lastRow - lastStartRow) == 2) {
                                     ChessMove move = new ChessMove(myPosition, nextPosition, null);
-                                    move.setMoveIsEnPassant();
                                     moves.add(move);
                                 }
                             }
@@ -107,4 +106,35 @@ public class PawnMoveCalculator implements PieceMovesCalculator{
 
         return moves;
     }
+
+    public Boolean moveIsEnPassant(ChessBoard board, ChessMove move) {
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        ChessPiece.PieceType pieceType = board.getPiece(startPosition).getPieceType();
+
+        if (pieceType == ChessPiece.PieceType.PAWN) { // Double check that the piece is a pawn,
+            int startCol = startPosition.getColumn();
+            int endCol = endPosition.getColumn();
+            if (startCol != endCol) { // pawn moves diagonally,
+                if (board.getPiece(endPosition) == null) { // but there is no piece diagonal to the pawn
+                    return Boolean.TRUE;
+                }
+            }
+        }
+
+        return Boolean.FALSE;
+    }
+
+
+    public ChessPosition getEnPassantCapturePosition(ChessMove move) {
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        int startRow = startPosition.getRow();
+        int endCol = endPosition.getColumn();
+        return new ChessPosition(startRow, endCol);
+    }
+
 }
+
+
+

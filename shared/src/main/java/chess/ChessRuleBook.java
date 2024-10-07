@@ -26,7 +26,7 @@ public class ChessRuleBook {
             case BISHOP -> new BishopMovesCalculator();
             case KNIGHT -> new KnightMovesCalculator();
             case ROOK -> new RookMovesCalculator();
-            case PAWN -> new PawnMoveCalculator();
+            case PAWN -> new PawnMovesCalculator();
         };
 
         // Find all potential moves
@@ -141,40 +141,39 @@ public class ChessRuleBook {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition(); // position to which our piece could move
 
-        Boolean enPassant = move.moveIsEnPassant(); // check if the move is en passant
 
         // In case our piece captures an opposing piece, temporarily store it before moving our piece
+        // If the piece is a pawn, check if the move is en passant
+        ChessPiece.PieceType pieceType = board.getPiece(startPosition).getPieceType();
         ChessPiece possiblePiece;
         ChessPosition opposingPosition;
-        if (enPassant) {
-            // use this multiplier to move forward/backward in the following code
-            int direction = switch (teamColor) {
-                case WHITE -> -1;
-                case BLACK -> 1;
-            };
-            int endCol = endPosition.getColumn();
-            int endRow = endPosition.getRow();
-            int opposingPieceRow = endRow + direction;
-            opposingPosition = new ChessPosition(endCol, opposingPieceRow);
-            possiblePiece = board.getPiece(opposingPosition);
+        if (pieceType == ChessPiece.PieceType.PAWN) {
+            PawnMovesCalculator pawnCalculator = new PawnMovesCalculator();
+            if (pawnCalculator.moveIsEnPassant(board, move)) {
+                opposingPosition = pawnCalculator.getEnPassantCapturePosition(move);
+            } else {
+                opposingPosition = endPosition;
+            }
         } else {
             opposingPosition = endPosition;
-            possiblePiece = board.getPiece(endPosition); // could be an opposing piece
         }
+        possiblePiece = board.getPiece(opposingPosition); // could be an opposing piece
 
         // Move our piece, but track our old piece type in case this is a pawn being promoted
         ChessPiece.PieceType oldType = board.getPiece(startPosition).getPieceType();
         board.movePiece(move);
-        if (isInCheck(board, teamColor)) { // if this move pus us in check, put everything back and return true
-            ChessMove reverseMove = move.reverseMove(oldType);
-            board.movePiece(reverseMove); // move the piece back where it was
-            board.addPiece(opposingPosition, possiblePiece); // put the piece back which may have been captured
-            return Boolean.TRUE;
-        } else {  // the move does not place us in check
-            ChessMove reverseMove = move.reverseMove(oldType);
-            board.movePiece(reverseMove); // move the piece back where it was
-            board.addPiece(opposingPosition, possiblePiece); // put the piece back which may have been captured
-            return Boolean.FALSE;
+        // Find if we are in check now
+        Boolean inCheck;
+        if (isInCheck(board, teamColor)) {
+            inCheck = Boolean.TRUE;
+        } else {
+            inCheck = Boolean.FALSE;
         }
+        // Reverse the move
+        ChessMove reverseMove = move.reverseMove(oldType);
+        board.movePiece(reverseMove); // move the piece back where it was
+        board.addPiece(opposingPosition, possiblePiece); // put the piece back which may have been captured
+
+        return inCheck;
     }
 }
