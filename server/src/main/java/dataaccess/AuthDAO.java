@@ -2,10 +2,10 @@ package dataaccess;
 
 import model.AuthData;
 
-import java.util.LinkedList;
+public interface AuthDAO {
 
-public class AuthDAO {
-
-    private LinkedList<AuthData> data = new LinkedList<>();
-
+    AuthData createAuth(String username) throws DataAccessException;
+    AuthData getAuth(String authToken) throws DataAccessException;
+    void deleteAuth(String authToken) throws DataAccessException;
+    void clear();
 }
