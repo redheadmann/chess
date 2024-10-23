@@ -7,14 +7,20 @@ import model.AuthData;
 import model.UserData;
 
 public class UserService implements Service {
+    public final UserDAO userDAO;
+
+    public UserService(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
     public record RegisterRequest(String username, String password, String email) {}
     public record RegisterResult(String username, String authToken, String message) {}
 
-    public RegisterResult register(RegisterRequest registerRequest, UserDAO userDAO, AuthDAO authDAO) {
+    public RegisterResult register(RegisterRequest registerRequest, AuthDAO authDAO) {
         try {
+            String username = registerRequest.username();
             // 1. get user
-            UserData userData = userDAO.getUser(registerRequest.username());
+            UserData userData = userDAO.getUser(username);
             // 2. if no user create new user
             if (userData == null) {
                 userData = new UserData(registerRequest.username(),
@@ -26,7 +32,7 @@ public class UserService implements Service {
                 return new RegisterResult(null, null, errorMessage);
             }
             // 3. create auth token
-            AuthData authData = authDAO.createAuth(registerRequest.username());
+            AuthData authData = authDAO.createAuth(username);
 
             return new RegisterResult(authData.username(), authData.authToken(), null);
         } catch (DataAccessException e) {
@@ -42,6 +48,6 @@ public class UserService implements Service {
     }
 
     public void clear() {
-
+        userDAO.clear();
     }
 }

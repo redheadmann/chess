@@ -12,15 +12,20 @@ public class MemoryAuthDAO implements AuthDAO {
 
     @Override
     public AuthData createAuth(String username) throws DataAccessException {
-        String token = UUID.randomUUID().toString();
-        AuthData authData = new AuthData(username, token);
-        data.put(token, authData);
+        String authToken = UUID.randomUUID().toString();
+        AuthData authData = new AuthData(username, authToken);
+        data.put(authToken, authData);
         return authData;
     }
 
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
-        return data.get(authToken);
+        AuthData authData = data.get(authToken);
+        if (authData == null) {
+            throw new DataAccessException("Cannot getAuth: authToken is not in database");
+        } else {
+            return authData;
+        }
     }
 
     @Override
