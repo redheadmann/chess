@@ -6,17 +6,11 @@ import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
 
-public class UserService implements Service {
-    public final UserDAO userDAO;
-
-    public UserService(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
-
+public class UserService {
     public record RegisterRequest(String username, String password, String email) {}
     public record RegisterResult(String username, String authToken, String message) {}
 
-    public RegisterResult register(RegisterRequest registerRequest, AuthDAO authDAO) {
+    public RegisterResult register(RegisterRequest registerRequest, UserDAO userDAO, AuthDAO authDAO) {
         try {
             String username = registerRequest.username();
             // 1. get user
@@ -47,7 +41,4 @@ public class UserService implements Service {
     public void logout(AuthData auth) {
     }
 
-    public void clear() {
-        userDAO.clear();
-    }
 }

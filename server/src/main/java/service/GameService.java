@@ -1,6 +1,7 @@
 package service;
 
 import chess.ChessGame;
+import dataaccess.GameDAO;
 
 import java.util.List;
 
@@ -12,4 +13,5 @@ public class GameService {
 
         return null;
     }
+
 }
