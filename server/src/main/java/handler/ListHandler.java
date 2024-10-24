@@ -26,6 +26,7 @@ public class ListHandler extends Handler {
             String authToken = req.headers("authorization");
             Boolean valid = this.validateAuthToken(authToken);
             if (!valid) { // Ensure authToken is valid
+                res.status(401);
                 GameService.ListResult result = new GameService.ListResult(null, "Error: unauthorized");
                 return serializer.toJson(result);
             }
