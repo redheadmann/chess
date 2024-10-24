@@ -9,8 +9,8 @@ import spark.Request;
 import spark.Response;
 
 public class ListHandler extends Handler {
-    public final GameDAO gameDAO;
     public final AuthDAO authDAO;
+    public final GameDAO gameDAO;
 
     public ListHandler(AuthDAO authDAO, GameDAO gameDAO) {
         super(authDAO);

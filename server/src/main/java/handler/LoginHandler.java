@@ -7,15 +7,14 @@ import service.UserService;
 import spark.Request;
 import spark.Response;
 
-
-public class RegisterHandler extends Handler {
-    public final UserDAO userDAO;
+public class LoginHandler extends Handler {
     public final AuthDAO authDAO;
+    public final UserDAO userDAO;
 
-    public RegisterHandler(AuthDAO authDAO, UserDAO userDAO) {
+    public LoginHandler(AuthDAO authDAO, UserDAO userDAO) {
         super(authDAO);
-        this.userDAO = userDAO;
         this.authDAO = authDAO;
+        this.userDAO = userDAO;
     }
 
     @Override
@@ -23,18 +22,16 @@ public class RegisterHandler extends Handler {
         Gson serializer = new Gson();
         try {
             // make object from request
-            UserService.RegisterRequest request = serializer.fromJson(req.body(), UserService.RegisterRequest.class);
+            UserService.LoginRequest request = serializer.fromJson(req.body(), UserService.LoginRequest.class);
 
-            // register user
+            // login
             UserService service = new UserService();
-            UserService.RegisterResult result = service.register(request, authDAO, userDAO);
+            UserService.LoginResult result = service.login(request, authDAO, userDAO);
 
             // Set the status code
             if (result.message() != null) {
-                if (result.message().equals("Error: bad request")) {
-                    res.status(400);
-                } else if (result.message().equals("Error: already taken")) {
-                    res.status(403);
+                if (result.message().equals("Error: unauthorized")) {
+                    res.status(401);
                 }
             }
 
@@ -43,10 +40,11 @@ public class RegisterHandler extends Handler {
             return serializer.toJson(result);
         } catch (Exception e) {
             res.status(500);
-            String errorMessage = "Internal server error: " + e.getMessage();
-            UserService.RegisterResult result = new UserService.RegisterResult(null, null, errorMessage);
+            String errorMessage = "Error: " + e.getMessage();
+            UserService.LoginResult result = new UserService.LoginResult(null, null, errorMessage);
             return serializer.toJson(result);
         }
     }
+
 
 }

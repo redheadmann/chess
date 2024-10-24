@@ -13,10 +13,16 @@ public class UserService {
     public record RegisterRequest(String username, String password, String email) {}
     public record RegisterResult(String username, String authToken, String message) {}
 
-    public RegisterResult register(RegisterRequest registerRequest, UserDAO userDAO, AuthDAO authDAO) {
+    public RegisterResult register(RegisterRequest registerRequest, AuthDAO authDAO, UserDAO userDAO) {
         try {
-            String username = registerRequest.username();
+            // ensure the request includes a username and a password
+            if (registerRequest.username() == null || registerRequest.password() == null) {
+                String errorMessage = "Error: bad request";
+                return new RegisterResult(null, null, errorMessage);
+            }
+
             // 1. get user
+            String username = registerRequest.username();
             UserData userData = userDAO.getUser(username);
             // 2. if no user create new user
             if (userData == null) {
@@ -42,16 +48,17 @@ public class UserService {
     public record LoginRequest(String username, String password) {}
     public record LoginResult(String username, String authToken, String message) {}
 
-    public LoginResult login(LoginRequest request, UserDAO userDAO, AuthDAO authDAO) {
+    public LoginResult login(LoginRequest request, AuthDAO authDAO, UserDAO userDAO) {
         String username = request.username();
         String password = request.password();
 
         // 1. getUser
         UserData userData = userDAO.getUser(username);
-        // 2. verify password
         if (userData == null) { // user not in database
             return new LoginResult(null, null, "Error: unauthorized");
-        } else if (!Objects.equals(userData.password(), password)) { // wrong password
+        }
+        // 2. verify password
+        if (!Objects.equals(userData.password(), password)) { // wrong password
             return new LoginResult(null, null, "Error: unauthorized");
         }
         // 3. create auth
