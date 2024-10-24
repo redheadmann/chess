@@ -1,6 +1,5 @@
 package service;
 
-import chess.ChessGame;
 import dataaccess.GameDAO;
 import model.GameData;
 
@@ -26,7 +25,7 @@ public class GameService {
     }
 
     public record CreateRequest(String gameName) {}
-    public record CreateResult(int gameID) {}
+    public record CreateResult(Integer gameID, String message) {}
 
     public CreateResult createGame(CreateRequest request, GameDAO gameDAO) {
         String gameName = request.gameName();

@@ -4,15 +4,14 @@ import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import service.GameService;
-import service.UserService;
 import spark.Request;
 import spark.Response;
 
-public class ListHandler extends Handler {
+public class CreateHandler extends Handler {
     public final AuthDAO authDAO;
     public final GameDAO gameDAO;
 
-    public ListHandler(AuthDAO authDAO, GameDAO gameDAO) {
+    public CreateHandler(AuthDAO authDAO, GameDAO gameDAO) {
         super(authDAO);
         this.gameDAO = gameDAO;
         this.authDAO = authDAO;
@@ -27,23 +26,25 @@ public class ListHandler extends Handler {
             Boolean valid = this.validateAuthToken(authToken);
             if (!valid) { // Ensure authToken is valid
                 res.status(401);
-                GameService.ListResult result = new GameService.ListResult(null, "Error: unauthorized");
+                GameService.CreateResult result = new GameService.CreateResult(null, "Error: unauthorized");
                 return serializer.toJson(result);
             }
 
-            // list games
+            // make object from request
+            GameService.CreateRequest request = serializer.fromJson(req.body(), GameService.CreateRequest.class);
+
+            // create game
             GameService service = new GameService();
-            GameService.ListResult result = service.list(gameDAO);
+            GameService.CreateResult result = service.createGame(request, gameDAO);
 
             // Return the body of the response
             res.type("application/json");
             return serializer.toJson(result);
         } catch (Exception e) {
             res.status(500);
-            GameService.ListResult result = new GameService.ListResult(null, "Error: " + e.getMessage());
+            String errorMessage = "Error: " + e.getMessage();
+            GameService.CreateResult result = new GameService.CreateResult(null, errorMessage);
             return serializer.toJson(result);
         }
     }
-
-
 }
