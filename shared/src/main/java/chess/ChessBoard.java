@@ -154,11 +154,16 @@ public class ChessBoard {
                 for (int col = 1; col <= 8; col++) {
                     ChessPosition position = new ChessPosition(row, col);
                     ChessPiece chessPiece = getPiece(position);
-                    if (chessPiece != null) { // If there is a piece
-                        if (chessPiece.getTeamColor() == teamColor) {  // and piece is of the correct color
-                            placements.add(position); // add the position to the queue
-                        }
-                    }
+                    addCorrectPiece(teamColor, chessPiece, position);
+                }
+            }
+        }
+
+        private void addCorrectPiece(ChessGame.TeamColor teamColor, ChessPiece chessPiece,
+                                     ChessPosition position) {
+            if (chessPiece != null) { // If there is a piece
+                if (chessPiece.getTeamColor() == teamColor) {  // and piece is of the correct color
+                    placements.add(position); // add the position to the queue
                 }
             }
         }

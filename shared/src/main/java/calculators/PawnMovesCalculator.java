@@ -66,12 +66,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
 
             // capture with promotion
             if (isLastRow(nextRow)) {
-                for (ChessPiece.PieceType promotionPiece : ChessPiece.PieceType.values()) {
-                    if (promotionPiece != ChessPiece.PieceType.PAWN &&
-                            promotionPiece != ChessPiece.PieceType.KING) { // cannot promote to pawn
-                        moves.add(new ChessMove(myPosition, nextPosition, promotionPiece));
-                    }
-                }
+                addPromotionMoves(myPosition, nextPosition, moves);
             } else {
                 // normal capture
                 moves.add(new ChessMove(myPosition, nextPosition, null));
@@ -112,12 +107,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
             if (nextRow > 1 && nextRow < 8) { // pawn stays in middle of the board
                 moves.add(new ChessMove(myPosition, nextPosition, null));
             } else if (isLastRow(nextRow)) { //we are near the final row
-                // we need a separate move for every possible promotion piece
-                for (ChessPiece.PieceType promotionPiece : ChessPiece.PieceType.values()) {
-                    if (promotionPiece != ChessPiece.PieceType.PAWN && promotionPiece != ChessPiece.PieceType.KING) { // cannot promote to pawn
-                        moves.add(new ChessMove(myPosition, nextPosition, promotionPiece));
-                    }
-                }
+                addPromotionMoves(myPosition, nextPosition, moves);
             }
 
 
@@ -132,6 +122,15 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
                         moves.add(new ChessMove(myPosition, nextnextPosition, null));
                     }
                 }
+            }
+        }
+    }
+
+    private static void addPromotionMoves(ChessPosition myPosition, ChessPosition nextPosition, ArrayList<ChessMove> moves) {
+        // we need a separate move for every possible promotion piece
+        for (ChessPiece.PieceType promotionPiece : ChessPiece.PieceType.values()) {
+            if (promotionPiece != ChessPiece.PieceType.PAWN && promotionPiece != ChessPiece.PieceType.KING) { // cannot promote to pawn
+                moves.add(new ChessMove(myPosition, nextPosition, promotionPiece));
             }
         }
     }
