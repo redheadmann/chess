@@ -49,12 +49,12 @@ public class GameService {
         return new CreateResult(newGame.gameID(), null);
     }
 
-    public record JoinRequest(Integer gameID, String playerColor) {}
+    public record JoinRequest(String playerColor, Integer gameID) {}
     public record JoinResult(String message) {}
 
     public JoinResult join(JoinRequest request, GameDAO gameDAO, String username) {
         int gameID = request.gameID();
-        String playerColor = request.playerColor;
+        String playerColor = request.playerColor();
 
         // check that playerColor is valid
         if (playerColor == null) {
