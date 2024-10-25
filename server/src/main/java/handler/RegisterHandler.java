@@ -30,13 +30,7 @@ public class RegisterHandler extends Handler {
             UserService.RegisterResult result = service.register(request, authDAO, userDAO);
 
             // Set the status code
-            if (result.message() != null) {
-                if (result.message().equals("Error: bad request")) {
-                    res.status(400);
-                } else if (result.message().equals("Error: already taken")) {
-                    res.status(403);
-                }
-            }
+            setStatusCode(res, result);
 
             // Return the body of the response
             res.type("application/json");

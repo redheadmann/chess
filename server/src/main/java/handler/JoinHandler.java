@@ -5,6 +5,7 @@ import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import model.AuthData;
 import service.GameService;
+import service.Result;
 import spark.Request;
 import spark.Response;
 
@@ -43,13 +44,7 @@ public class JoinHandler extends Handler {
             GameService.JoinResult result = service.join(request, gameDAO, username);
 
             // Set the status code
-            if (result.message() != null) {
-                if (result.message().equals("Error: bad request")) {
-                    res.status(400);
-                } else if (result.message().equals("Error: already taken")) {
-                    res.status(403);
-                }
-            }
+            setStatusCode(res, result);
 
             // Return the body of the response
             res.type("application/json");
@@ -61,4 +56,5 @@ public class JoinHandler extends Handler {
             return serializer.toJson(result);
         }
     }
+
 }

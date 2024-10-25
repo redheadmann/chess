@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class UserService {
     public record RegisterRequest(String username, String password, String email) {}
-    public record RegisterResult(String username, String authToken, String message) {}
+    public record RegisterResult(String username, String authToken, String message) implements Result {}
 
     public RegisterResult register(RegisterRequest registerRequest, AuthDAO authDAO, UserDAO userDAO) {
         try {
@@ -46,7 +46,7 @@ public class UserService {
 
 
     public record LoginRequest(String username, String password) {}
-    public record LoginResult(String username, String authToken, String message) {}
+    public record LoginResult(String username, String authToken, String message) implements Result {}
 
     public LoginResult login(LoginRequest request, AuthDAO authDAO, UserDAO userDAO) {
         String username = request.username();
@@ -67,7 +67,7 @@ public class UserService {
     }
 
     public record LogoutRequest(String authToken) {}
-    public record LogoutResult(String message) {}
+    public record LogoutResult(String message) implements Result {}
 
     public LogoutResult logout(LogoutRequest request, AuthDAO authDAO) {
         String authToken = request.authToken();

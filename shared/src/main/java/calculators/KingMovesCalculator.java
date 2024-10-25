@@ -27,24 +27,31 @@ public class KingMovesCalculator implements PieceMovesCalculator{
                     ChessPosition nextPosition = new ChessPosition(possibleRow, possibleCol);
 
                     // if endPosition is still on the board
-                    if (possibleRow >= 1 && possibleRow <= 8 && possibleCol >= 1 && possibleCol <= 8) {
-                        // check for a piece already at the end position
-                        ChessPiece pieceOnPosition = board.getPiece(new ChessPosition(possibleRow, possibleCol));
-                        if (pieceOnPosition != null) {
-                            // check if piece on end position is of the same color
-                            if (pieceOnPosition.getTeamColor() != teamColor) { // the piece is on the opposing team and we can capture it
-                                moves.add(new ChessMove(myPosition, nextPosition, null));
-                            }
-                        } else { // we can move to any empty space
-                                moves.add(new ChessMove(myPosition, nextPosition, null));
-                        }
-                    }
+                    addPossibleMove(board, myPosition, possibleRow, possibleCol, teamColor, moves, nextPosition);
                 }
             }
         }
 
 
         return moves;
+    }
+
+    private static void addPossibleMove(ChessBoard board, ChessPosition myPosition,
+                                        int possibleRow, int possibleCol,
+                                        ChessGame.TeamColor teamColor, ArrayList<ChessMove> moves,
+                                        ChessPosition nextPosition) {
+        if (possibleRow >= 1 && possibleRow <= 8 && possibleCol >= 1 && possibleCol <= 8) {
+            // check for a piece already at the end position
+            ChessPiece pieceOnPosition = board.getPiece(new ChessPosition(possibleRow, possibleCol));
+            if (pieceOnPosition != null) {
+                // check if piece on end position is of the same color
+                if (pieceOnPosition.getTeamColor() != teamColor) { // the piece is on the opposing team and we can capture it
+                    moves.add(new ChessMove(myPosition, nextPosition, null));
+                }
+            } else { // we can move to any empty space
+                    moves.add(new ChessMove(myPosition, nextPosition, null));
+            }
+        }
     }
 
 

@@ -39,11 +39,7 @@ public class CreateHandler extends Handler {
             GameService.CreateResult result = service.createGame(request, gameDAO);
 
             // Set the status code
-            if (result.message() != null) {
-                if (result.message().equals("Error: bad request")) {
-                    res.status(400);
-                }
-            }
+            setStatusCode(res, result);
 
             // Return the body of the response
             res.type("application/json");

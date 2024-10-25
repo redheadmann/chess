@@ -50,25 +50,31 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
                 // Check for piece on diagonal
                 nextPosition = new ChessPosition(nextRow, nextCol);
                 if (board.getPiece(nextPosition) != null) { // if piece is diagonal to pawn
-                    if (board.getPiece(nextPosition).getTeamColor() != teamColor) { // and is on opposing team
-                        // then you can capture it
-
-                        // capture with promotion
-                        if (nextRow == 8 || nextRow == 1) {
-                            for (ChessPiece.PieceType promotionPiece : ChessPiece.PieceType.values()) {
-                                if (promotionPiece != ChessPiece.PieceType.PAWN &&
-                                        promotionPiece != ChessPiece.PieceType.KING) { // cannot promote to pawn
-                                    moves.add(new ChessMove(myPosition, nextPosition, promotionPiece));
-                                }
-                            }
-                        } else {
-                            // normal capture
-                            moves.add(new ChessMove(myPosition, nextPosition, null));
-                        }
-                    }
+                    addNormalCaptures(board, myPosition, teamColor, moves, nextPosition, nextRow);
                 } else { // piece is not diagonal to pawn, so en passant is possible
                     addEnPassant(board, myPosition, currentRow, nextCol, nextPosition, moves);
                 }
+            }
+        }
+    }
+
+    private static void addNormalCaptures(ChessBoard board, ChessPosition myPosition,
+                                          ChessGame.TeamColor teamColor, ArrayList<ChessMove> moves,
+                                          ChessPosition nextPosition, int nextRow) {
+        if (board.getPiece(nextPosition).getTeamColor() != teamColor) { // and is on opposing team
+            // then you can capture it
+
+            // capture with promotion
+            if (isLastRow(nextRow)) {
+                for (ChessPiece.PieceType promotionPiece : ChessPiece.PieceType.values()) {
+                    if (promotionPiece != ChessPiece.PieceType.PAWN &&
+                            promotionPiece != ChessPiece.PieceType.KING) { // cannot promote to pawn
+                        moves.add(new ChessMove(myPosition, nextPosition, promotionPiece));
+                    }
+                }
+            } else {
+                // normal capture
+                moves.add(new ChessMove(myPosition, nextPosition, null));
             }
         }
     }
@@ -105,7 +111,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
             // check if we can move forward, but not to final row
             if (nextRow > 1 && nextRow < 8) { // pawn stays in middle of the board
                 moves.add(new ChessMove(myPosition, nextPosition, null));
-            } else if (nextRow == 1 || nextRow == 8) { //we are near the final row
+            } else if (isLastRow(nextRow)) { //we are near the final row
                 // we need a separate move for every possible promotion piece
                 for (ChessPiece.PieceType promotionPiece : ChessPiece.PieceType.values()) {
                     if (promotionPiece != ChessPiece.PieceType.PAWN && promotionPiece != ChessPiece.PieceType.KING) { // cannot promote to pawn
@@ -128,6 +134,10 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
                 }
             }
         }
+    }
+
+    private static boolean isLastRow(int nextRow) {
+        return nextRow == 1 || nextRow == 8;
     }
 
     public Boolean moveIsEnPassant(ChessBoard board, ChessMove move) {

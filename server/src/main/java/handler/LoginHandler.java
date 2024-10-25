@@ -29,11 +29,7 @@ public class LoginHandler extends Handler {
             UserService.LoginResult result = service.login(request, authDAO, userDAO);
 
             // Set the status code
-            if (result.message() != null) {
-                if (result.message().equals("Error: unauthorized")) {
-                    res.status(401);
-                }
-            }
+            setStatusCode(res, result);
 
             // Return the body of the response
             res.type("application/json");

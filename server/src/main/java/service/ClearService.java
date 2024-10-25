@@ -15,7 +15,7 @@ public class ClearService {
         this.authDAO = authDAO;
     }
 
-    public record ClearResult(String message) {}
+    public record ClearResult(String message) implements Result {}
 
     public ClearResult clear() {
         try {

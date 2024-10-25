@@ -27,11 +27,7 @@ public class LogoutHandler extends Handler {
             UserService.LogoutResult result = service.logout(request, authDAO);
 
             // Set the status code
-            if (result.message() != null) {
-                if (result.message().equals("Error: unauthorized")) {
-                    res.status(401);
-                }
-            }
+            setStatusCode(res, result);
 
             // Return the body of the response
             res.type("application/json");

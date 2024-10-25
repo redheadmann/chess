@@ -10,7 +10,7 @@ import java.util.List;
 
 public class GameService {
     public record ReducedGameData(int gameID, String whiteUsername, String blackUsername, String gameName) {}
-    public record ListResult(List<ReducedGameData> games, String message) {}
+    public record ListResult(List<ReducedGameData> games, String message) implements Result {}
 
     public ListResult list(GameDAO gameDAO) {
         // 1. list all games
@@ -27,7 +27,7 @@ public class GameService {
     }
 
     public record CreateRequest(String gameName) {}
-    public record CreateResult(Integer gameID, String message) {}
+    public record CreateResult(Integer gameID, String message) implements Result {}
 
     public CreateResult createGame(CreateRequest request, GameDAO gameDAO) {
         String gameName = request.gameName();
@@ -50,7 +50,7 @@ public class GameService {
     }
 
     public record JoinRequest(String playerColor, Integer gameID) {}
-    public record JoinResult(String message) {}
+    public record JoinResult(String message) implements Result {}
 
     public JoinResult join(JoinRequest request, GameDAO gameDAO, String username) {
         Integer gameID = request.gameID();

@@ -25,21 +25,27 @@ public class KnightMovesCalculator implements PieceMovesCalculator{
                 int nextRow = currentRow + rowMovement;
                 ChessPosition nextPosition = new ChessPosition(nextRow, nextCol);
 
-                if (nextRow >=1 && nextRow <=8 && nextCol >=1 && nextCol <=8) { // still on the board
-                    ChessPiece pieceInWay = board.getPiece(nextPosition);
-                    if (pieceInWay != null) {
-                        if (pieceInWay.getTeamColor() != teamColor) {
-                            moves.add(new ChessMove(myPosition, nextPosition, null));
-                        }
-                    } else {
-                        moves.add(new ChessMove(myPosition, nextPosition, null));
-                    }
-                }
+                addPossibleMoves(board, myPosition, nextRow, nextCol, nextPosition, teamColor, moves);
 
             }
         }
 
 
         return moves;
+    }
+
+    private static void addPossibleMoves(ChessBoard board, ChessPosition myPosition,
+                                         int nextRow, int nextCol, ChessPosition nextPosition,
+                                         ChessGame.TeamColor teamColor, ArrayList<ChessMove> moves) {
+        if (nextRow >=1 && nextRow <=8 && nextCol >=1 && nextCol <=8) { // still on the board
+            ChessPiece pieceInWay = board.getPiece(nextPosition);
+            if (pieceInWay != null) {
+                if (pieceInWay.getTeamColor() != teamColor) {
+                    moves.add(new ChessMove(myPosition, nextPosition, null));
+                }
+            } else {
+                moves.add(new ChessMove(myPosition, nextPosition, null));
+            }
+        }
     }
 }
