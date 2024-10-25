@@ -53,11 +53,12 @@ public class GameService {
     public record JoinResult(String message) {}
 
     public JoinResult join(JoinRequest request, GameDAO gameDAO, String username) {
-        int gameID = request.gameID();
+        Integer gameID = request.gameID();
         String playerColor = request.playerColor();
 
-        // check that playerColor is valid
-        if (playerColor == null) {
+
+        // check that playerColor is valid and gameID is not null
+        if (playerColor == null || gameID == null) {
             return new JoinResult("Error: bad request");
         } else if (!playerColor.equals("WHITE") && !playerColor.equals("BLACK")) {
             return new JoinResult("Error: bad request");
