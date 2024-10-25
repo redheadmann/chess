@@ -17,7 +17,7 @@ public class ChessRuleBook {
     public Collection<ChessMove> makeMoves(ChessBoard board, ChessPosition myPosition) {
         // Find the type of the piece and its color
         ChessPiece chessPiece = board.getPiece(myPosition);
-        if (chessPiece == null) return null; // null check
+        if (chessPiece == null) {return null;} // null check
         ChessPiece.PieceType type = chessPiece.getPieceType();
 
         // Use the appropriate moves calculator
@@ -46,7 +46,7 @@ public class ChessRuleBook {
     public Collection<ChessMove> validMoves(ChessBoard board, ChessPosition myPosition) {
         // Get all potential moves
         Collection<ChessMove> moves = makeMoves(board, myPosition);
-        if (moves == null) return null; // null check
+        if (moves == null) {return null;} // null check
 
         // Get team color and remove moves which leave our king in check
         ChessPiece chessPiece = board.getPiece(myPosition);
@@ -96,7 +96,7 @@ public class ChessRuleBook {
             and 2) moving each other piece to all possible positions and checking if we are in check
          */
 
-        if (!isInCheck(board, teamColor)) return Boolean.FALSE; // If we aren't even in check, we are not in checkmate
+        if (!isInCheck(board, teamColor)) {return Boolean.FALSE;} // If we aren't even in check, we are not in checkmate
 
         // Our king is in check. For each position held by this team,
         for (ChessBoard.BoardIterator<ChessPosition> positionIterator = board.iterator(teamColor); positionIterator.hasNext();) {
@@ -122,7 +122,7 @@ public class ChessRuleBook {
             otherwise, return True
         */
 
-        if (isInCheckmate(board, teamColor)) return Boolean.FALSE;
+        if (isInCheckmate(board, teamColor)) {return Boolean.FALSE;}
 
         // For each position held by this team,
         for (ChessBoard.BoardIterator<ChessPosition> positionIterator = board.iterator(teamColor); positionIterator.hasNext();) {

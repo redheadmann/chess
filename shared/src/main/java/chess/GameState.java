@@ -3,7 +3,7 @@ package chess;
 public class GameState {
     private ChessGame.TeamColor teamTurn;
 
-    public GameState (ChessBoard gameBoard) {
+    public GameState () {
         this.teamTurn = ChessGame.TeamColor.WHITE; // game starts off with white to move
     }
 
@@ -44,7 +44,7 @@ public class GameState {
     public Boolean moveIsInTurn(ChessMove move, ChessBoard board) {
         ChessPiece piece = board.getPiece(move.getStartPosition());
         ChessGame.TeamColor teamColor = piece.getTeamColor();
-        if (teamColor == this.teamTurn) return Boolean.TRUE;
-        else return Boolean.FALSE;
+        if (teamColor == this.teamTurn) {return Boolean.TRUE;}
+        else {return Boolean.FALSE;}
     }
 }

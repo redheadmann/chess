@@ -16,7 +16,7 @@ public class ChessGame {
     public ChessGame() {
         board = new ChessBoard();
         board.resetBoard(); // start off with the default board
-        gameState = new GameState(board); // always keep track of the game state
+        gameState = new GameState(); // always keep track of the game state
     }
 
     /**
@@ -50,7 +50,7 @@ public class ChessGame {
      * @return the color of the opposing team
      */
     public static TeamColor getOtherColor(TeamColor teamColor) {
-        if (teamColor == TeamColor.WHITE) return TeamColor.BLACK;
+        if (teamColor == TeamColor.WHITE) {return TeamColor.BLACK;}
         return TeamColor.WHITE;
     }
 
@@ -75,7 +75,7 @@ public class ChessGame {
         ChessPosition moveStartPosition = move.getStartPosition();
         Collection<ChessMove> validMoves = validMoves(moveStartPosition);
         // If validMoves is null, there was no piece at the given position
-        if (validMoves == null) throw new InvalidMoveException("Move given for nonexistent piece");
+        if (validMoves == null) {throw new InvalidMoveException("Move given for nonexistent piece");}
         // If there is a piece at the position, but it is not its turn, throw an exception
         if (!gameState.moveIsInTurn(move, board)) {
             throw new InvalidMoveException("It is not this team's turn");

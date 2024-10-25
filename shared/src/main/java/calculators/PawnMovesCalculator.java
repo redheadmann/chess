@@ -37,7 +37,9 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         return moves;
     }
 
-    private static void addDiagonalMoves(ChessBoard board, ChessPosition myPosition, int currentCol, int currentRow, int direction, ChessGame.TeamColor teamColor, ArrayList<ChessMove> moves) {
+    private static void addDiagonalMoves(ChessBoard board, ChessPosition myPosition, int currentCol,
+                                         int currentRow, int direction, ChessGame.TeamColor teamColor,
+                                         ArrayList<ChessMove> moves) {
         int nextRow;
         ChessPosition nextPosition;
         for (int colMovement: new int[]{-1, 1}) {
@@ -54,7 +56,8 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
                         // capture with promotion
                         if (nextRow == 8 || nextRow == 1) {
                             for (ChessPiece.PieceType promotionPiece : ChessPiece.PieceType.values()) {
-                                if (promotionPiece != ChessPiece.PieceType.PAWN && promotionPiece != ChessPiece.PieceType.KING) { // cannot promote to pawn
+                                if (promotionPiece != ChessPiece.PieceType.PAWN &&
+                                        promotionPiece != ChessPiece.PieceType.KING) { // cannot promote to pawn
                                     moves.add(new ChessMove(myPosition, nextPosition, promotionPiece));
                                 }
                             }
@@ -70,7 +73,9 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         }
     }
 
-    private static void addEnPassant(ChessBoard board, ChessPosition myPosition, int currentRow, int nextCol, ChessPosition nextPosition, ArrayList<ChessMove> moves) {
+    private static void addEnPassant(ChessBoard board, ChessPosition myPosition, int currentRow,
+                                     int nextCol, ChessPosition nextPosition,
+                                     ArrayList<ChessMove> moves) {
         // Check for en passant: check the last move for a pawn which moved 2 spaces right next to us
         GameLog log = board.getGameLog();
         GameLog.LogEntry lastLogEntry = log.getLastMove();
@@ -92,7 +97,10 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         }
     }
 
-    private static void addForwardMoves(ChessBoard board, ChessPosition myPosition, ChessPosition nextPosition, int nextRow, ArrayList<ChessMove> moves, int direction, int currentCol, ChessGame.TeamColor teamColor, int currentRow) {
+    private static void addForwardMoves(ChessBoard board, ChessPosition myPosition,
+                                        ChessPosition nextPosition, int nextRow,
+                                        ArrayList<ChessMove> moves, int direction, int currentCol,
+                                        ChessGame.TeamColor teamColor, int currentRow) {
         if (board.getPiece(nextPosition) == null) { // next space must be empty
             // check if we can move forward, but not to final row
             if (nextRow > 1 && nextRow < 8) { // pawn stays in middle of the board

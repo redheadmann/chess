@@ -9,7 +9,6 @@ public class RookMovesCalculator implements PieceMovesCalculator{
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> moves = new ArrayList<>();
-        ChessPiece rook = board.getPiece(myPosition);
 
         /* We go out in one direction at a time and stop at the edge of a board
           or when we encounter another piece
