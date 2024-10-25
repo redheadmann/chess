@@ -1,5 +1,7 @@
 package service;
 
+import chess.ChessGame;
+import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import model.GameData;
 
@@ -29,9 +31,53 @@ public class GameService {
 
     public CreateResult createGame(CreateRequest request, GameDAO gameDAO) {
         String gameName = request.gameName();
-        gameDAO.createGame(gameName);
 
-        return new CreateResult(1);
+        if (gameName == null) { // ensure game name is not null
+            String message = "Error: bad request";
+            return new CreateResult(null, message);
+        }
+
+        GameData newGame;
+        // overkill, but catch the exception for if too many games already exist
+        try {
+            newGame = gameDAO.createGame(gameName);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        return new CreateResult(newGame.gameID(), null);
     }
+
+    public record JoinRequest(Integer gameID, String playerColor) {}
+    public record JoinResult(String message) {}
+
+    public JoinResult join(JoinRequest request, GameDAO gameDAO, String username) {
+        int gameID = request.gameID();
+        String playerColor = request.playerColor;
+
+        // check that playerColor is valid
+        if (playerColor == null) {
+            return new JoinResult("Error: bad request");
+        } else if (!playerColor.equals("WHITE") && !playerColor.equals("BLACK")) {
+            return new JoinResult("Error: bad request");
+        }
+        ChessGame.TeamColor color = switch(playerColor) {
+            case "WHITE" -> ChessGame.TeamColor.WHITE;
+            case "BLACK" -> ChessGame.TeamColor.BLACK;
+            default -> throw new IllegalStateException("Unexpected value: " + playerColor);
+        };
+
+        // join game
+        try {
+            gameDAO.updateGame(username, color, gameID);
+        } catch (DataAccessException e) {
+            String errorMessage = e.getMessage();
+            return new JoinResult(errorMessage);
+        }
+
+        return new JoinResult(null);
+    }
+
 
 }

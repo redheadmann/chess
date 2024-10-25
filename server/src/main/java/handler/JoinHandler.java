@@ -8,11 +8,11 @@ import service.GameService;
 import spark.Request;
 import spark.Response;
 
-public class CreateHandler extends Handler {
+public class JoinHandler extends Handler {
     public final AuthDAO authDAO;
     public final GameDAO gameDAO;
 
-    public CreateHandler(AuthDAO authDAO, GameDAO gameDAO) {
+    public JoinHandler(AuthDAO authDAO, GameDAO gameDAO) {
         super(authDAO);
         this.gameDAO = gameDAO;
         this.authDAO = authDAO;
@@ -27,21 +27,27 @@ public class CreateHandler extends Handler {
             Boolean valid = this.validateAuthToken(authToken);
             if (!valid) { // Ensure authToken is valid
                 res.status(401);
-                GameService.CreateResult result = new GameService.CreateResult(null, "Error: unauthorized");
+                GameService.JoinResult result = new GameService.JoinResult("Error: unauthorized");
                 return serializer.toJson(result);
             }
 
-            // make object from request
-            GameService.CreateRequest request = serializer.fromJson(req.body(), GameService.CreateRequest.class);
+            // get username
+            AuthData authData = authDAO.getAuth(authToken);
+            String username = authData.username();
 
-            // create game
+            // make object from request
+            GameService.JoinRequest request = serializer.fromJson(req.body(), GameService.JoinRequest.class);
+
+            // join game
             GameService service = new GameService();
-            GameService.CreateResult result = service.createGame(request, gameDAO);
+            GameService.JoinResult result = service.join(request, gameDAO, username);
 
             // Set the status code
             if (result.message() != null) {
                 if (result.message().equals("Error: bad request")) {
                     res.status(400);
+                } else if (result.message().equals("Error: already taken")) {
+                    res.status(403);
                 }
             }
 
@@ -51,7 +57,7 @@ public class CreateHandler extends Handler {
         } catch (Exception e) {
             res.status(500);
             String errorMessage = "Error: " + e.getMessage();
-            GameService.CreateResult result = new GameService.CreateResult(null, errorMessage);
+            GameService.JoinResult result = new GameService.JoinResult(errorMessage);
             return serializer.toJson(result);
         }
     }

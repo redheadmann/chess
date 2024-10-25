@@ -10,12 +10,15 @@ public class MemoryGameDAO implements  GameDAO {
     private final HashMap<Integer, GameData> data = new HashMap<>();
 
     @Override
-    public GameData createGame(String gameName) {
+    public GameData createGame(String gameName) throws DataAccessException {
         // Create a unique id
         Random random = new Random();
         // try a maximum of 100 times to generate a new gameID
         int gameID = 1234;
-        for (int i=0; i < 100; i++) {
+        for (int i=0; i < 101; i++) {
+            if (i == 100) {
+                throw new DataAccessException("Cannot create game, too many games on server");
+            }
             if (!data.containsKey(gameID)) { // break from loop if new gameID is unique
                 break;
             }
@@ -31,7 +34,7 @@ public class MemoryGameDAO implements  GameDAO {
     public GameData getGame(int gameID) throws DataAccessException {
         GameData gameData = data.get(gameID);
         if (gameData == null) {
-            throw new DataAccessException(String.format("game %d is not in database", gameID));
+            throw new DataAccessException("Error: bad request");
         }
         return gameData;
     }
@@ -45,13 +48,20 @@ public class MemoryGameDAO implements  GameDAO {
     public void updateGame(String username, ChessGame.TeamColor playerColor, int gameID) throws DataAccessException {
         // copy old game data
         GameData oldGame = this.getGame(gameID);
+
+        // update correct username based on player color, ensuring name is not taken
         String newWhiteUsername;
         String newBlackUsername;
-        // update correct username based on player color, ensuring name is not taken
         if (playerColor == ChessGame.TeamColor.WHITE) {
+            if (oldGame.whiteUsername() != null) {
+                throw new DataAccessException("Error: already taken");
+            }
             newWhiteUsername = username;
             newBlackUsername = oldGame.blackUsername();
         } else {
+            if (oldGame.blackUsername() != null) {
+                throw new DataAccessException("Error: already taken");
+            }
             newWhiteUsername = oldGame.whiteUsername();
             newBlackUsername = username;
         }
