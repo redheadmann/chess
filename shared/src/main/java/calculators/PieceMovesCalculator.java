@@ -1,7 +1,8 @@
-package chess;
+package calculators;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import chess.*;
 
 public interface PieceMovesCalculator {
     Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition);

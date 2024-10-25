@@ -1,5 +1,7 @@
 package chess;
 
+import calculators.PawnMovesCalculator;
+
 import java.util.*;
 
 /**

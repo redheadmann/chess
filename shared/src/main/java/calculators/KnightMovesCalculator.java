@@ -1,7 +1,8 @@
-package chess;
+package calculators;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import chess.*;
 
 public class KnightMovesCalculator implements PieceMovesCalculator{
 
@@ -12,8 +13,8 @@ public class KnightMovesCalculator implements PieceMovesCalculator{
         int currentRow = myPosition.getRow();
         int currentCol = myPosition.getColumn();
 
-        ChessPiece Knight = board.getPiece(myPosition);
-        ChessGame.TeamColor teamColor = Knight.getTeamColor();
+        ChessPiece knight = board.getPiece(myPosition);
+        ChessGame.TeamColor teamColor = knight.getTeamColor();
 
         // move to all 8 spaces
         for (int rowMovement: new int[]{-2,-1,1,2}) {

@@ -1,5 +1,7 @@
 package chess;
 
+import calculators.*;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
@@ -67,7 +69,7 @@ public class ChessPiece {
 
     @Override
     public String toString() {
-        HashMap<PieceType, String> map = new HashMap<PieceType, String>();
+        HashMap<PieceType, String> map = new HashMap<>();
         map.put(PieceType.KING, "K");
         map.put(PieceType.QUEEN, "Q");
         map.put(PieceType.ROOK, "R");

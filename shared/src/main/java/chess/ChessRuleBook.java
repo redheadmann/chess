@@ -3,6 +3,7 @@ package chess;
 import java.util.Collection;
 
 import static chess.ChessGame.getOtherColor;
+import calculators.*;
 
 public class ChessRuleBook {
 
