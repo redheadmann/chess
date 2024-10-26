@@ -26,8 +26,8 @@ public class RegisterHandler extends Handler {
             UserService.RegisterRequest request = serializer.fromJson(req.body(), UserService.RegisterRequest.class);
 
             // register user
-            UserService service = new UserService();
-            UserService.RegisterResult result = service.register(request, authDAO, userDAO);
+            UserService service = new UserService(authDAO, userDAO);
+            UserService.RegisterResult result = service.register(request);
 
             // Set the status code
             setStatusCode(res, result);

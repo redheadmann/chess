@@ -2,16 +2,19 @@ package handler;
 
 import com.google.gson.Gson;
 import dataaccess.AuthDAO;
+import dataaccess.UserDAO;
 import service.UserService;
 import spark.Request;
 import spark.Response;
 
 public class LogoutHandler extends Handler {
     public final AuthDAO authDAO;
+    public final UserDAO userDAO;
 
-    public LogoutHandler(AuthDAO authDAO) {
+    public LogoutHandler(AuthDAO authDAO, UserDAO userDAO) {
         super(authDAO);
         this.authDAO = authDAO;
+        this.userDAO = userDAO;
     }
 
     @Override
@@ -23,8 +26,8 @@ public class LogoutHandler extends Handler {
             UserService.LogoutRequest request = new UserService.LogoutRequest(authToken);
 
             // logout
-            UserService service = new UserService();
-            UserService.LogoutResult result = service.logout(request, authDAO);
+            UserService service = new UserService(authDAO, userDAO);
+            UserService.LogoutResult result = service.logout(request);
 
             // Set the status code
             setStatusCode(res, result);

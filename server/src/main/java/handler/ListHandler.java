@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import service.GameService;
-import service.UserService;
 import spark.Request;
 import spark.Response;
 
@@ -32,8 +31,8 @@ public class ListHandler extends Handler {
             }
 
             // list games
-            GameService service = new GameService();
-            GameService.ListResult result = service.list(gameDAO);
+            GameService service = new GameService(gameDAO);
+            GameService.ListResult result = service.list();
 
             // Return the body of the response
             res.type("application/json");

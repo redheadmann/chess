@@ -5,7 +5,6 @@ import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import model.AuthData;
 import service.GameService;
-import service.Result;
 import spark.Request;
 import spark.Response;
 
@@ -40,8 +39,8 @@ public class JoinHandler extends Handler {
             GameService.JoinRequest request = serializer.fromJson(req.body(), GameService.JoinRequest.class);
 
             // join game
-            GameService service = new GameService();
-            GameService.JoinResult result = service.join(request, gameDAO, username);
+            GameService service = new GameService(gameDAO);
+            GameService.JoinResult result = service.join(request, username);
 
             // Set the status code
             setStatusCode(res, result);

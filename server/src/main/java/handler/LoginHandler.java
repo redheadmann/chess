@@ -25,8 +25,8 @@ public class LoginHandler extends Handler {
             UserService.LoginRequest request = serializer.fromJson(req.body(), UserService.LoginRequest.class);
 
             // login
-            UserService service = new UserService();
-            UserService.LoginResult result = service.login(request, authDAO, userDAO);
+            UserService service = new UserService(authDAO, userDAO);
+            UserService.LoginResult result = service.login(request);
 
             // Set the status code
             setStatusCode(res, result);

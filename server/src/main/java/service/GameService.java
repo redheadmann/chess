@@ -9,10 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameService {
+    public final GameDAO gameDAO;
+
+    public GameService(GameDAO gameDAO) {
+        this.gameDAO = gameDAO;
+    }
+
     public record ReducedGameData(int gameID, String whiteUsername, String blackUsername, String gameName) {}
     public record ListResult(List<ReducedGameData> games, String message) implements Result {}
 
-    public ListResult list(GameDAO gameDAO) {
+    public ListResult list() {
         // 1. list all games
         List<GameData> games = gameDAO.listGames();
         // 2. convert list to ListResult
@@ -29,7 +35,7 @@ public class GameService {
     public record CreateRequest(String gameName) {}
     public record CreateResult(Integer gameID, String message) implements Result {}
 
-    public CreateResult createGame(CreateRequest request, GameDAO gameDAO) {
+    public CreateResult createGame(CreateRequest request) {
         String gameName = request.gameName();
 
         if (gameName == null) { // ensure game name is not null
@@ -52,7 +58,7 @@ public class GameService {
     public record JoinRequest(String playerColor, Integer gameID) {}
     public record JoinResult(String message) implements Result {}
 
-    public JoinResult join(JoinRequest request, GameDAO gameDAO, String username) {
+    public JoinResult join(JoinRequest request, String username) {
         Integer gameID = request.gameID();
         String playerColor = request.playerColor();
 

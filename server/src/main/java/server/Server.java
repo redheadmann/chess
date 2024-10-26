@@ -27,7 +27,7 @@ public class Server {
                 (new LoginHandler(authDAO, userDAO)).handleRequest(req,
                         res)); // login
         Spark.delete("/session", (req, res) ->
-                (new LogoutHandler(authDAO)).handleRequest(req,
+                (new LogoutHandler(authDAO, userDAO)).handleRequest(req,
                         res)); // logout
         Spark.get("/game", (req, res) ->
                 (new ListHandler(authDAO, gameDAO)).handleRequest(req,

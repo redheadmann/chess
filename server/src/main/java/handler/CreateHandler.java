@@ -3,7 +3,6 @@ package handler;
 import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
-import model.AuthData;
 import service.GameService;
 import spark.Request;
 import spark.Response;
@@ -35,8 +34,8 @@ public class CreateHandler extends Handler {
             GameService.CreateRequest request = serializer.fromJson(req.body(), GameService.CreateRequest.class);
 
             // create game
-            GameService service = new GameService();
-            GameService.CreateResult result = service.createGame(request, gameDAO);
+            GameService service = new GameService(gameDAO);
+            GameService.CreateResult result = service.createGame(request);
 
             // Set the status code
             setStatusCode(res, result);

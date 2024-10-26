@@ -1,6 +1,5 @@
 package service;
 
-import com.mysql.cj.log.Log;
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
@@ -10,10 +9,18 @@ import model.UserData;
 import java.util.Objects;
 
 public class UserService {
+    public AuthDAO authDAO;
+    public UserDAO userDAO;
+
+    public UserService(AuthDAO authDAO, UserDAO userDAO) {
+        this.authDAO = authDAO;
+        this.userDAO = userDAO;
+    }
+
     public record RegisterRequest(String username, String password, String email) {}
     public record RegisterResult(String username, String authToken, String message) implements Result {}
 
-    public RegisterResult register(RegisterRequest registerRequest, AuthDAO authDAO, UserDAO userDAO) {
+    public RegisterResult register(RegisterRequest registerRequest) {
         try {
             // ensure the request includes a username and a password
             if (registerRequest.username() == null || registerRequest.password() == null) {
@@ -48,7 +55,7 @@ public class UserService {
     public record LoginRequest(String username, String password) {}
     public record LoginResult(String username, String authToken, String message) implements Result {}
 
-    public LoginResult login(LoginRequest request, AuthDAO authDAO, UserDAO userDAO) {
+    public LoginResult login(LoginRequest request) {
         String username = request.username();
         String password = request.password();
 
@@ -69,7 +76,7 @@ public class UserService {
     public record LogoutRequest(String authToken) {}
     public record LogoutResult(String message) implements Result {}
 
-    public LogoutResult logout(LogoutRequest request, AuthDAO authDAO) {
+    public LogoutResult logout(LogoutRequest request) {
         String authToken = request.authToken();
 
         // 1. delete Auth
