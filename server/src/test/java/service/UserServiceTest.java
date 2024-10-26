@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class UserServiceTest extends ServiceTest {
     @Test
+    @DisplayName("Register new user")
     void register() {
         // Register user
         String username = "user";
@@ -40,6 +41,7 @@ class UserServiceTest extends ServiceTest {
     }
 
     @Test
+    @DisplayName("Login")
     void login() {
         // register user
         String username = "user";
@@ -57,6 +59,7 @@ class UserServiceTest extends ServiceTest {
     }
 
     @Test
+    @DisplayName("login with wrong passcode")
     void failLogin() {
         // register user
         String username = "user";
@@ -74,6 +77,7 @@ class UserServiceTest extends ServiceTest {
     }
 
     @Test
+    @DisplayName("Successfully logout")
     void logout() {
         // register user
         String username = "user";
@@ -93,6 +97,7 @@ class UserServiceTest extends ServiceTest {
     }
 
     @Test
+    @DisplayName("Logout without authToken")
     void failLogout() {
         // register user
         String username = "user";

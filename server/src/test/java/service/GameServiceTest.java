@@ -28,7 +28,7 @@ class GameServiceTest extends ServiceTest {
     }
 
     @Test
-    @DisplayName("List Games")
+    @DisplayName("List no games")
     void emptyList() {
         // create game
         String gameName = "name";
@@ -42,6 +42,7 @@ class GameServiceTest extends ServiceTest {
     }
 
     @Test
+    @DisplayName("createGame")
     void createGame() {
         // create game
         String gameName = "gameName";
@@ -64,6 +65,7 @@ class GameServiceTest extends ServiceTest {
     }
 
     @Test
+    @DisplayName("join game")
     void join() {
         // create game
         String gameName = "gameName";
