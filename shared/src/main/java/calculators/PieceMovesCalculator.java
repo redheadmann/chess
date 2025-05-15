@@ -7,6 +7,7 @@ import chess.*;
 public interface PieceMovesCalculator {
     Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition);
 
+
     default void moveUntilBlocked(ChessBoard board, ChessPosition myPosition, int rowDirection,
                                   int colDirection, ArrayList<ChessMove> moves) {
         // find current information

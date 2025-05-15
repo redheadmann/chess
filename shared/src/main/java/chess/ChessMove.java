@@ -39,7 +39,8 @@ public class ChessMove {
     /**
      * @return ChessPosition of starting location
      */
-    public ChessPosition getStartPosition() {return startPosition;
+    public ChessPosition getStartPosition() {
+        return startPosition;
     }
 
     /**
