@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class GameLog {
     public record LogEntry(ChessMove move, ChessPiece piece) { }
@@ -19,5 +20,17 @@ public class GameLog {
         return moves;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameLog gameLog = (GameLog) o;
+        return Objects.equals(moves, gameLog.moves);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(moves);
+    }
 }
 

@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Objects;
+
 public class GameState {
     private ChessGame.TeamColor teamTurn;
 
@@ -46,5 +48,18 @@ public class GameState {
         ChessGame.TeamColor teamColor = piece.getTeamColor();
         if (teamColor == this.teamTurn) {return Boolean.TRUE;}
         else {return Boolean.FALSE;}
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameState gameState = (GameState) o;
+        return teamTurn == gameState.teamTurn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(teamTurn);
     }
 }
